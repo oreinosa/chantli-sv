@@ -1,0 +1,34 @@
+<ng-container *ngIf="user; else loading" @fadeIn @fadeOut>
+  <div class="row">
+    <div class="col-12 col-sm-6">
+      <mat-card>
+        <h4>Hola, {{ user.name }}</h4>
+        <ng-container *ngIf='user.workplace; else setWorkplace'>
+          <p>Lugar de trabajo: {{ user?.workplace }}</p>
+        </ng-container>
+        <ng-template #setWorkplace>
+          <mat-form-field class='full-width'>
+            <mat-select placeholder='Lugar de trabajo' [(ngModel)]='workplace'>
+              <mat-option *ngFor='let workplace of workplaces | async' [value]='workplace.name'>
+                {{ workplace.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button mat-button type='button' (click)='onUpdateWorkplace()'>Actualizar lugar de trabajo</button>
+        </ng-template>
+        <p>Rol: {{ user.role }} </p>
+        <p>Correo electronico : {{ user.email }} </p>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <app-my-orders [user]='user'></app-my-orders>
+    </div>
+  </div>
+</ng-container>
+<ng-template #loading>
+  <div class="col-12">
+    <mat-spinner class='mx-auto'></mat-spinner>
+  </div>
+</ng-template>

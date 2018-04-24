@@ -1,0 +1,64 @@
+<form #f='ngForm' (ngSubmit)='onSubmit(f.value)' *ngIf='menu'>
+  <h6>Agregar menu</h6>
+  <ng-container *ngIf='!f?.submitted; else loading'>
+    <div class="row">
+      <mat-form-field class='col-12'>
+        <input matInput type="date" placeholder='Fecha' [(ngModel)]='menu.date' name='date' required>
+      </mat-form-field>
+      <mat-form-field class='col-12'>
+        <input matInput type="number" placeholder='Precio' [(ngModel)]='menu.price' name='price' required>
+      </mat-form-field>
+      <div class="col-12 col-sm-5">
+        <p>
+          <b>Agregar productos</b>
+        </p>
+        <mat-form-field class='full-width'>
+          <input matInput [formControl]="selProductCtrl" [matAutocomplete]="auto" required>
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let product of filteredProducts | async" [value]="product.name">
+              {{ product.name }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <button mat-button type='button' [disabled]='!selProductCtrl.valid' (click)='onAddProduct()'>Agregar producto</button>
+      </div>
+      <div class="col-12 col-sm-7">
+        <p>
+          <b>Productos agregados</b>
+          <!-- {{ selProducts | json }} -->
+        </p>
+        <div class='row' *ngIf='selProducts.length; else noAddedProducts'>
+          <div class="col-12 col-sm-6">
+            <p class='sub-title'>Platos principales</p>
+            <ng-container *ngFor='let product of selProducts | productByCategory:"Principal":refresh'>
+              <p> {{ product.name }}
+                <button mat-icon-button type='button' (click)='onRemoveProduct(product)'>
+                  <i class="material-icons">delete</i>
+                </button>
+              </p>
+            </ng-container>
+          </div>
+          <div class="col-12 col-sm-6">
+            <p class='sub-title'>Acompañamientos</p>
+            <ng-container *ngFor='let product of selProducts | productByCategory:"Acompañamiento":refresh'>
+              <p>{{ product.name }}
+                <button mat-icon-button type='button' (click)='onRemoveProduct(product)'>
+                  <i class="material-icons">delete</i>
+                </button>
+              </p>
+            </ng-container>
+          </div>
+        </div>
+        <ng-template #noAddedProducts>
+          <p>Aun no has agregado productos.</p>
+        </ng-template>
+      </div>
+    </div>
+    <br>
+    <button mat-button type='submit' [disabled]='f.invalid || !((selProducts | productByCategory:"Acompañamiento":refresh).length && (selProducts | productByCategory:"Principal":refresh).length)'>Agregar</button>
+    <button mat-button type='button' (click)='onBack()'>Cancelar</button>
+  </ng-container>
+  <ng-template #loading>
+    <mat-spinner class='mx-auto'></mat-spinner>
+  </ng-template>
+</form>

@@ -1,0 +1,45 @@
+<mat-card @slideLeft>
+  <mat-card-header>
+    <mat-card-title>
+      <h3>{{ menu.date | date:"EEEE" | dow }} - {{ menu.date | date:"shortDate"}}</h3>
+    </mat-card-title>
+    <mat-card-subtitle>
+      <h5>Precio : {{ menu.price | currency }}</h5>
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <div class='row'>
+      <ng-container *ngIf='products; else loading'>
+        <div class="col-12 col-md-6">
+          <ul>
+            <h4 class='text-center'>Platos principales</h4>
+            <li *ngFor='let mc of products.mainCourses'>
+              <h5>{{ mc.name }}</h5>
+            </li>
+          </ul>
+        </div>
+        <div class="col-12 col-md-6">
+          <ul>
+            <h4 class='text-center'>Acompañamientos</h4>
+            <li *ngFor='let s of products.sides'>
+              <h5>{{ s.name }}</h5>
+            </li>
+          </ul>
+        </div>
+        <div class="col-12 mx-auto">
+          <p class='text-center' *ngIf='(myOrders | async) as ordersNumber'>
+            <i>Ya has ordenado {{ ordersNumber }} plato(s) para este día</i>
+          </p>
+        </div>
+      </ng-container>
+      <ng-template #loading>
+        <div class="mx-auto">
+          <mat-spinner></mat-spinner>
+        </div>
+      </ng-template>
+    </div>
+  </mat-card-content>
+  <mat-card-actions align='end'>
+    <button mat-button [disabled]='!menu?.active' (click)='onSelect()'>Ordenar para {{ menu.date | date:"EEEE" | dow }}</button>
+  </mat-card-actions>
+</mat-card>

@@ -1,0 +1,70 @@
+<ng-container *ngIf='loaded; else loading'>
+  <ng-container *ngIf='dataSource?.data?.length <= 0'>
+    <h5>Aun no hay menus.</h5>
+  </ng-container>
+  <div class="table-container">
+    <div class="table-header">
+      <div class="row">
+        <div class="col-12">
+          <button mat-button type='button' [routerLink]='["agregar"]'>Agregar menu</button>
+        </div>
+      </div>
+    </div>
+    <mat-table #table [dataSource]="dataSource" class='table'>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="date">
+        <mat-header-cell *matHeaderCellDef> Fecha </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          {{element.date}}
+        </mat-cell>
+      </ng-container>
+
+      <!-- Products Column -->
+      <ng-container matColumnDef="products">
+        <mat-header-cell *matHeaderCellDef> Productos </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <div class='row' *ngIf='(element.id | menuProducts | async) as products'>
+            <div class="col-12 col-sm-6">
+              <h6>Platos principales </h6>
+              <p *ngFor='let product of products | productByCategory:"Principal"'>
+                {{ product?.name }}
+              </p>
+            </div>
+            <div class="col-12 col-sm-6">
+              <h6>Acompañamientos </h6>
+              <p *ngFor='let product of products | productByCategory:"Acompañamiento"'>
+                {{ product?.name }}
+              </p>
+            </div>
+          </div>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Price Column -->
+      <ng-container matColumnDef="price">
+        <mat-header-cell *matHeaderCellDef> Precio </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          {{element.price}}
+        </mat-cell>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef> </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <mat-slide-toggle [checked]='element?.active' (change)='onUpdateActive(element, $event.checked)'>Disponible</mat-slide-toggle>
+          <!-- <button mat-button type='button' (click)='onUpdateActive(element)'>{{ element?.active ? 'Disponible' : 'Cerrado' }}</button> -->
+          <button mat-button type='button' [routerLink]='["actualizar",element.id]'>Actualizar</button>
+          <button mat-button type='button' [routerLink]='["eliminar",element.id]'>Eliminar</button>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+  </div>
+</ng-container>
+<ng-template #loading>
+  <mat-spinner class='mx-auto'></mat-spinner>
+</ng-template>

@@ -1,0 +1,70 @@
+<mat-card>
+  <mat-card-content>
+    <ng-container *ngIf='dataSource; else loading'>
+      <div class="table-container" *ngIf='dataSource.data.length; else noOrders'>
+        <mat-table #table matSort (matSortChange)="sortData($event)" [dataSource]="dataSource" class='table'>
+
+          <!-- MainCourse Column -->
+          <ng-container matColumnDef="products">
+            <mat-header-cell *matHeaderCellDef> Productos </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <p>
+                <b>Principal : </b> {{element.products?.mainCourse}} </p>
+              <p>
+                <b>Acompañamientos : </b>
+              </p>
+              <p *ngFor='let side of element.products?.sides'> {{ side }} </p>
+              <p>
+                <b>Bebida : </b> {{element.products?.beverage}} </p>
+              <p>
+                <b>Tortillas : </b> {{ element.products?.tortillas }}
+              </p>
+            </mat-cell>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <mat-header-cell *matHeaderCellDef mat-sort-header='status'> Estado </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element?.details?.status}}
+            </mat-cell>
+          </ng-container>
+
+          <!-- Ordenado para Column -->
+          <ng-container matColumnDef="orderedForDate">
+            <mat-header-cell *matHeaderCellDef mat-sort-header='orderedForDate'> Para </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.details?.orderedForDate | date:"EEEE" | dow }} {{ element.details?.orderedForDate | date:"shortDate" }}
+            </mat-cell>
+          </ng-container>
+
+          <!-- Payment Column -->
+          <ng-container matColumnDef="price">
+            <mat-header-cell *matHeaderCellDef mat-sort-header='price'> Precio </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.payment.balance | currency }}
+            </mat-cell>
+          </ng-container>
+
+          <!-- Ordenado para Column -->
+          <ng-container matColumnDef="paid">
+            <mat-header-cell *matHeaderCellDef mat-sort-header='paid'> Pagado? </mat-header-cell>
+            <mat-cell *matCellDef="let element" [ngClass]='element.details.paid ? "bg-success" : "bg-danger"'>
+              <p></p>
+            </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+      </div>
+      <ng-template #noOrders>
+        <h4 class='text-center'>No hay ordenes (?)</h4>
+      </ng-template>
+    </ng-container>
+    <ng-template #loading>
+      <mat-spinner class='mx-auto'></mat-spinner>
+    </ng-template>
+  </mat-card-content>
+</mat-card>

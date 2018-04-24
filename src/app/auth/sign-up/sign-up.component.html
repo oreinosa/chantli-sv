@@ -1,0 +1,49 @@
+<div class="col-12 col-sm-10 col-md-7 mx-auto" style='padding-top:50px;' @slideLeft>
+  <h1 class='text-center'>Registrarse!</h1>
+  <form #f='ngForm' (ngSubmit)='onSignUp(f.value); f.resetForm()' class='col-10 col-sm-8 col-md-6 mx-auto text-center'>
+    <mat-form-field class='full-width'>
+      <input matInput type="text" placeholder='Nombre' [(ngModel)]='signUp.name' name='name' required>
+      <i matPrefix class="material-icons">person_outline</i>
+      <mat-error *ngIf='f.controls.name?.hasError("required")'>Por favor, ingresa tu nombre!</mat-error>
+    </mat-form-field>
+    <mat-form-field class='full-width'>
+      <input matInput type="email" placeholder='Correo electrónico' [(ngModel)]='signUp.email' name='email' required email>
+      <i matPrefix class="material-icons">email</i>
+      <mat-error *ngIf='f.controls.email?.hasError("email") && !f.controls.email?.hasError("required")'>Por favor, ingresa un correo electrónico válido (ie: john@doe.com)!</mat-error>
+      <mat-error *ngIf='f.controls.email?.hasError("required")'>Por favor, ingresa tu correo electrónico!</mat-error>
+    </mat-form-field>
+    <mat-form-field class='full-width'>
+      <input matInput type="password" placeholder='Contraseña' [(ngModel)]='signUp.password' name='password' required>
+      <i matPrefix class="material-icons">vpn_key</i>
+      <mat-error *ngIf='f.controls.password?.hasError("required")'>Por favor, ingresa tu constraseña!</mat-error>
+    </mat-form-field>
+    <mat-form-field class='full-width'>
+      <input matInput type="password" placeholder='Confirmar contraseña' ngModel name='confirmPassword' required [pattern]='f.controls.password?.value'>
+      <i matPrefix class="material-icons">vpn_key</i>
+      <mat-error *ngIf='f.controls.confirmPassword?.hasError("pattern")'>Las contraseñas tienen que ser iguales!</mat-error>
+      <mat-error *ngIf='f.controls.confirmPassword?.hasError("required")'>Por favor, confirma tu contraseña!</mat-error>
+    </mat-form-field>
+    <mat-form-field class="full-width">
+      <mat-select placeholder='Lugar de trabajo' [(ngModel)]='signUp.workplace' name='workplace' required> 
+        <mat-option *ngFor='let workplace of (workplaces | async)' [value]='workplace.name'>
+          {{ workplace.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div class='float-right'>
+      <button mat-button type="submit" [disabled]='f.invalid'>Registrarse</button>
+      <button mat-raised-button type="reset" [disabled]='f.untouched' color='warn'>Reset</button>
+    </div>
+    <br>
+    <br>
+    <br>
+  </form>
+  <hr>
+  <div class='float-right'>
+    <button type='button' mat-button routerLink="/ingresar">
+      <i>Ya estás registrado?</i>
+    </button>
+  </div>
+  <br>
+  <br>
+</div>

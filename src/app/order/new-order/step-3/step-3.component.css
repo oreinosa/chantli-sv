@@ -1,0 +1,19 @@
+.col-12, .col-md-4{
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+figure {
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	height: 250px;	
+}
+.img-fluid{
+	height: 250px;
+}
+h6{
+	font-weight: normal;
+}
+.mat-card{
+	text-overflow: wrap;
+}

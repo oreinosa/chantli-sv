@@ -1,0 +1,10 @@
+<h6>Eliminar producto</h6>
+<ng-container *ngIf='!submitted; else loading'>
+  <!-- Loading {{ submitted }} -->
+  <p>Seguro que quieres eliminar este lugar de trabajo? ({{ id }})</p>
+  <button mat-button type='button' (click)='onSubmit()'>Eliminar</button>
+  <button mat-button type='button' (click)='onBack()'>Cancelar</button>
+</ng-container>
+<ng-template #loading>
+  <mat-spinner class='mx-auto'></mat-spinner>
+</ng-template>

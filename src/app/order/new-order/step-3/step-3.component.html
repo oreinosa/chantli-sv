@@ -1,0 +1,76 @@
+<mat-card @fadeIn>
+  <mat-card-header>
+    <mat-card-title>
+      <h3>Confirmando tu pedido para {{ menu?.date | date:"EEEE" | dow }}</h3>
+    </mat-card-title>
+    <mat-card-subtitle>
+      <h5>Paso 3</h5>
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="row">
+      <div class="col-12 col-sm-6 col-md-4 text-center" >
+        <h4>
+          Plato fuerte:
+        </h4>
+        <figure>
+          <img [src]="selProducts?.mainCourse?.imageURL" alt="" class="img-fluid">
+        </figure>
+        <h6>{{ selProducts?.mainCourse?.name }}</h6>
+      </div>
+      <!-- END OF SELECTED MAIN COURSE -->
+      <!-- SELECTED SIDES -->
+      <div class="col-12 col-sm-6 col-md-4 text-center" *ngIf='!selProducts?.mainCourse?.noSides'>
+        <h4>
+          Acompañamientos
+        </h4>
+        <ng-container *ngFor='let s of selProducts?.sides'>
+          <figure>
+            <img [src]="s?.imageURL" alt="" class="img-fluid">
+          </figure>
+          <h6>{{ s?.name }}</h6>
+        </ng-container>
+      </div>
+      <!-- END OF SELECTED SIDES -->
+      <!-- SELECTED BEVERAGE, TORTILLAS AMOUNT, ORDER AMOUNT -->
+      <div class="col-12 col-sm-6 col-md-4 text-center" >
+        <div class="col-12">
+          <h4>
+            Bebida :
+          </h4>
+          <figure>
+            <img [src]="selProducts?.beverage?.imageURL" alt="" class="img-fluid">
+          </figure>
+          <h6>{{ selProducts?.beverage?.name }}</h6>
+        </div>
+        <br>
+        <br>
+        <div class="col-12">
+          <h4>
+            <mat-form-field>
+              <input matInput type="number" [(ngModel)]='tortillas' placeholder="Tortillas" min=0 max=4 required>
+            </mat-form-field>
+          </h4>
+          <h4>
+            Total : {{ menu?.price | calTotal:selProducts:tortillas | currency }}
+          </h4>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+  <mat-card-actions align='end'>
+    <button mat-button type='button' (click)='onStep(1)'>
+      <i class="material-icons d-inline-flex d-md-none">arrow_back</i>
+      <i class="material-icons d-inline-flex d-md-none">arrow_back</i>
+      <span class="d-none d-md-inline-flex">Regresar (Paso 1)</span>
+    </button>
+    <button mat-button type='button' (click)='onStep(2)'>
+      <i class="material-icons d-inline-flex d-md-none">arrow_back</i>
+      <span class="d-none d-md-inline-flex">Regresar (Paso 2)</span>
+    </button>
+    <button mat-button type='button' (click)='onConfirm()'>
+      <i class="material-icons d-inline-flex d-md-none">done</i>
+      <span class="d-none d-md-inline-flex">Confirmar</span>
+    </button>
+  </mat-card-actions>
+</mat-card>

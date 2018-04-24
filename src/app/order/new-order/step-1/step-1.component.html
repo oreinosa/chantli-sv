@@ -1,0 +1,51 @@
+<mat-card @fadeIn>
+  <mat-card-header>
+    <mat-card-title>
+      <h3>Selecciona el plato principal y acompañamientos</h3>
+    </mat-card-title>
+    <mat-card-subtitle>
+      <h5>Paso 1</h5>
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <!-- {{ menuProducts | async}} -->
+    <div class="row">
+      <div class="col-12 col-md-6 hover text-center">
+        <h4>Platos principales</h4>
+        <div class="row">
+          <div class="col-12 col-sm-6 col-md-12" *ngFor='let mc of (menuProducts | async)?.mainCourses '>
+            <figure>
+              <img [src]="mc.imageURL" alt="main_course" class="img-fluid" (click)='onSelectMainCourse(mc)' [ngClass]='(mc.name == selProducts?.mainCourse?.name) ? "selected" : ""'>
+            </figure>
+            <h6>{{ mc.name }}</h6>
+            <h6 *ngIf='mc?.noSides'>(Este plato no lleva acompañamientos)</h6>
+          </div>
+        </div>
+        <h6 *ngIf='!selProducts?.mainCourse' @shrinkX>Selecciona el plato principal</h6>
+      </div>
+      <div class="col-12 col-md-6 hover text-center">
+        <h4>Acompañamientos</h4>
+        <div class="row">
+          <div class="col-12 col-sm-6" *ngFor='let s of (menuProducts | async)?.sides'>
+            <figure>
+              <img [src]='s.imageURL' alt="side" class="img-fluid" (click)='onSelectSide(s)' [ngClass]='(selSides?.indexOf(s.name) >= 0 && !selProducts?.mainCourse?.noSides) ? "selected" : ""'>
+            </figure>
+            <h6>{{ s.name }}</h6>
+          </div>
+        </div>
+        <mat-checkbox [(ngModel)]='doubleSide' (change)='onDoubleSide()'>
+          Doble acompañamiento?
+        </mat-checkbox>
+        <h6 *ngIf='!selProducts?.mainCourse?.noSides && selProducts?.sides?.length < 2 && !doubleSide' @shrinkX>
+          Selecciona los 2 acompañamientos
+        </h6>
+        <h6 *ngIf='doubleSide && selProducts?.sides?.length'>Doble {{ selSides[0] }}</h6>
+        <!-- {{ selProducts?.sides | json }} -->
+      </div>
+    </div>
+  </mat-card-content>
+  <mat-card-actions align='end'>
+    <button mat-button type='button' (click)='onStep(0)'>Regresar</button>
+    <button mat-button type='button' (click)='onStep(2)' [disabled]='!selProducts?.mainCourse || (!selProducts?.mainCourse?.noSides && selProducts?.sides?.length < 2)'>Continuar</button>
+  </mat-card-actions>
+</mat-card>

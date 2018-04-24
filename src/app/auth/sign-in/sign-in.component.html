@@ -1,0 +1,37 @@
+<div class="col-12 col-sm-10 col-md-7 mx-auto" style='padding-top:50px;' @slideRight>
+  <h1 class='text-center'>Ingresa a tu cuenta!</h1>
+  <form #f='ngForm' (ngSubmit)='onSignIn(f.value); f.resetForm()' class='col-10 col-sm-8 col-md-6 mx-auto text-center'>
+    <mat-form-field class='full-width'>
+      <input matInput type="email" placeholder='Correo electrónico' [(ngModel)]='signIn.email' name='email' required email>
+      <i matPrefix class="material-icons">email</i>
+      <mat-error *ngIf='f.controls.email?.hasError("email") && !f.controls.email?.hasError("required")'>Por favor, ingresa un correo electrónico válido (ie: john@doe.com)!</mat-error>
+      <mat-error *ngIf='f.controls.email?.hasError("required")'>Por favor, ingresa tu correo electrónico!</mat-error>
+    </mat-form-field>
+    <mat-form-field class='full-width'>
+      <input matInput type="password" placeholder='Contraseña' [(ngModel)]='signIn.password' name='password' required>
+      <i matPrefix class="material-icons">vpn_key</i>
+      <mat-error *ngIf='f.controls.password?.hasError("required")'>Por favor, ingresa tu contraseña!</mat-error>
+    </mat-form-field>
+    <div class='float-right'>
+      <button mat-button type="submit" [disabled]='f.invalid || f.submitted' class='bg-success'>Ingresar</button>
+    </div>
+    <br>
+    <br>
+    <br>
+  </form>
+  <hr>
+  <div class='row'>
+    <div class="col-12 offset-sm-4 col-sm-4">
+      <button mat-raised-button type='button' (click)='onSignInProvider("google")'>Ingresar con cuenta Google</button>
+    </div>
+    <div class="col-12 col-sm-4">
+      <button type='button' mat-button routerLink="/registrarse">
+        <i>Aún no te has registrado?</i>
+      </button>
+      <button type='button' mat-button routerLink="/reset-password">
+        <i>Olvidaste la contraseña?</i>
+      </button>
+    </div>
+  </div>
+  <br>
+</div>

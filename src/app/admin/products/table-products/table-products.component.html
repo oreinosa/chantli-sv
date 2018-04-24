@@ -1,0 +1,59 @@
+<div class="table-container">
+  <div class="table-header">
+    <div class="row">
+      <div class="col-12">
+        <button mat-button type='button' [routerLink]='["agregar"]'>Agregar producto</button>
+      </div>
+    </div>
+  </div>
+  <mat-table #table matSort [dataSource]="dataSource" class='table'>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{element.name}}
+      </mat-cell>
+    </ng-container>
+
+    <!-- Category Column -->
+    <ng-container matColumnDef="category">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Categoría </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{ element.category }}
+      </mat-cell>
+    </ng-container>
+
+    <!-- Cost Column -->
+    <ng-container matColumnDef="cost">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Costo </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{ element.cost | currency }} {{ (element.category == "Bebida") ? '(Extra : ' + ( element?.extra | currency )+ ')' : '' }}
+      </mat-cell>
+    </ng-container>
+
+    <!-- ImageURL Column -->
+    <ng-container matColumnDef="imageURL">
+      <mat-header-cell *matHeaderCellDef> Imagen </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <img [src]="element.imageURL" alt="imagen" class="img-fluid" style='max-height:250px;'>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Actions Column -->
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef> </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <button mat-button type='button' [routerLink]='["actualizar",element.id]'>Actualizar</button>
+        <button mat-button type='button' [routerLink]='["eliminar",element.id]'>Eliminar</button>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+  <ng-container *ngIf='!dataSource?.data?.length'>
+    <h5 class='text-center'>Aun no hay productos.</h5>
+  </ng-container>
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</div>

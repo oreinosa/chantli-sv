@@ -1,0 +1,23 @@
+.mat-column-products {
+  flex: 0 0 30%;
+}
+.mat-column-status {
+  flex: 0 0 20%;
+}
+.mat-column-orderedForDate {
+  flex: 0 0 20%;
+}
+.mat-column-price {
+  flex: 0 0 20%;
+}
+.mat-column-paid {
+  flex: 0 0 10%;
+}
+.mat-table {
+  overflow: auto;
+}
+.mat-cell, .mat-header-cell {
+  overflow: hidden;
+  word-wrap: break-word;
+  padding: 0 15px;   
+}

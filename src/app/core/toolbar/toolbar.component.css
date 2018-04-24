@@ -1,0 +1,14 @@
+a.title{
+  /* margin-right: 15px; */
+  font-size: 115%;
+}
+.active{
+  color:black;
+}
+a{
+  text-decoration: none;
+}
+a:hover{
+  color: black;
+  text-decoration-color: inherit;
+}

@@ -1,0 +1,33 @@
+<mat-toolbar color='primary' class='mat-elevation-z5 full-width'>
+  <mat-toolbar-row>
+    <a class='title' mat-button routerLink='inicio' routerLinkActive='active'>Chantli - SV</a>
+    <!-- HIDE ON XS AND SM -->
+    <div class="d-none d-md-inline-flex">
+      <ng-container *ngFor='let link of links'>
+        <a mat-button [routerLink]='link.route' routerLinkActive='active'>
+          <i class="material-icons">{{ link.icon }}</i>
+          {{ link.label }}
+        </a>
+      </ng-container>
+    </div>
+    <!-- END OF HIDE ON XS -->
+    <span class="spacer"></span>
+    <!-- ACTIONS  -->
+    <a mat-button [routerLink]='action.route' *ngFor='let action of actions' routerLinkActive='active'>
+      <i class="material-icons">{{ action.icon }}</i>
+      <span class="d-none d-md-inline-flex">{{ action.label }}
+      </span>
+    </a>
+    <a mat-button *ngIf='user | async' (click)='onSignOut()' routerLink='/'>
+      <i class="material-icons">exit_to_app</i>
+    </a>
+    <!-- END ACTIONS -->
+  </mat-toolbar-row>
+  <!-- XS TOOLBAR -->
+  <mat-toolbar-row class="d-inline-flex d-md-none">
+    <a mat-button [routerLink]='link.route' *ngFor='let link of links' routerLinkActive='active'>
+      <i class="material-icons">{{ link.icon }}</i>
+    </a>
+  </mat-toolbar-row>
+  <!-- END OF XS TOOLBAR -->
+</mat-toolbar>

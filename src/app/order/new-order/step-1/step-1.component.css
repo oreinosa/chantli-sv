@@ -1,0 +1,30 @@
+.col-12, .col-md-4{
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.hover figure img {
+	opacity: 1;
+	-webkit-transition: .3s ease-in-out;
+	transition: .3s ease-in-out;
+}
+.hover figure img:hover, .hover figure img.selected {
+	opacity: 0.5;
+}
+figure {
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	height: 250px;	
+}
+.hover .img-fluid{
+	cursor: pointer;	
+}
+.img-fluid{
+	height: 250px;
+}
+h6{
+	font-weight: normal;
+}
+.mat-card{
+	text-overflow: wrap;
+}

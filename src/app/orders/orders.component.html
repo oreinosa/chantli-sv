@@ -1,0 +1,247 @@
+<!-- FILTERS CARD -->
+<div class="row">
+  <div class="col-12 mb-3">
+    <mat-card class='teal lighten-2' style='cursor:pointer;' (click)='onFiltersVisibility()'>
+      <h4>Filtros</h4>
+    </mat-card>
+    <mat-card class='teal lighten-4' [ngStyle]='{"display": visibility ? "block" : "none"}'>
+      <mat-card-content>
+        <div class="filters row">
+          <div class="col-12">
+            <p>
+              <mat-slide-toggle [(ngModel)]='filters.allOrders' (change)='onAllOrders($event.checked)'>Todas las ordenes?</mat-slide-toggle>
+            </p>
+          </div>
+          <div class="col-12 col-sm-4">
+            <mat-form-field class="full-width">
+              <mat-select [disabled]='filters.anyUser || filters.allOrders' [(ngModel)]='user' placeholder='Por usuario'>
+                <mat-option *ngFor='let user of (users | async)' [value]='user'>{{ user.name }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <p>
+              <mat-slide-toggle [(ngModel)]='filters.anyUser' (change)='onCheckFilters()'>Todos los usuarios?</mat-slide-toggle>
+            </p>
+          </div>
+          <div class="col-12 col-sm-8">
+            <div class="row">
+              <div class="col-12 col-sm-6">
+                <mat-form-field class='full-width'>
+                  <input matInput type='date' [disabled]='filters.anyDate' [(ngModel)]='orderedForDateFrom' placeholder="Por fecha de pedido (Desde)">
+                </mat-form-field>
+              </div>
+              <div class="col-12 col-sm-6">
+                <mat-form-field class='full-width'>
+                  <input matInput type='date' [disabled]='filters.anyDate' [(ngModel)]='orderedForDateTo' placeholder="Por fecha de pedido (Hasta)">
+                </mat-form-field>
+              </div>
+              <div class="col-12 text-center">
+                <p>
+                  <mat-slide-toggle [(ngModel)]='filters.anyDate' (change)='onCheckFilters()'>Todas las fechas?</mat-slide-toggle>
+                  <button mat-button (click)='onThisDay()'>Solo ahora</button>
+                  <button mat-button (click)='onThisWeek()'>Esta semana</button>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-sm-4">
+            <mat-form-field class='full-width'>
+              <mat-select placeholder='Estado' [disabled]='filters.anyStatus' [(ngModel)]='status'>
+                <mat-option value='Entregado'>Entregado</mat-option>
+                <mat-option value='Empaquetado'>Empaquetado</mat-option>
+                <mat-option value='Confirmado'>Confirmado</mat-option>
+                <mat-option value='Nueva orden'>Nueva orden</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <p>
+              <mat-slide-toggle [(ngModel)]='filters.anyStatus' (change)='onCheckFilters()'>Cualquier estado?</mat-slide-toggle>
+            </p>
+          </div>
+          <div class="col-12 col-sm-4">
+            <mat-form-field class='full-width'>
+              <mat-select placeholder='Pagado?' [disabled]='filters.anyPaid' [(ngModel)]='paid'>
+                <mat-option [value]='true'>Pagado</mat-option>
+                <mat-option [value]='false'>Pendiente</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <p>
+              <mat-slide-toggle [(ngModel)]='filters.anyPaid' (change)='onCheckFilters()'>Pagados/Pendientes</mat-slide-toggle>
+            </p>
+          </div>
+          <div class="col-12">
+            <button mat-button (click)='onFilter()'>Filtrar</button>
+            <hr>
+          </div>
+          <div class="col-12">
+            <h5>Mostrar: </h5>
+            <mat-slide-toggle (change)='onColumnsFilters()' [(ngModel)]='columnsFilters.products'>Productos</mat-slide-toggle>
+            <mat-slide-toggle (change)='onColumnsFilters()' [(ngModel)]='columnsFilters.status'>Estado</mat-slide-toggle>
+            <mat-slide-toggle (change)='onColumnsFilters()' [(ngModel)]='columnsFilters.date'>Para</mat-slide-toggle>
+            <mat-slide-toggle (change)='onColumnsFilters()' [(ngModel)]='columnsFilters.payment'>Pago</mat-slide-toggle>
+            <mat-slide-toggle (change)='onColumnsFilters()' [(ngModel)]='columnsFilters.paid'>Pagado</mat-slide-toggle>
+            <!-- <mat-button-toggle>Acciones</mat-button-toggle>             -->
+            <hr>
+          </div>
+          <div class="col-12">
+            <h5>Información : </h5>
+            <h6>
+              <span>
+                <b>Pendiente : </b> {{ allPayment.pending | currency }}</span> ||
+              <span>
+                <b>Cobrado : </b> {{ allPayment.charged | currency }}</span> ||
+              <span>
+                <b>Total : </b> {{ (allPayment.pending + allPayment.charged) | currency }}</span>
+            </h6>
+            <h6>
+              <span>
+                <b>Nuevas ordenes : </b> {{ allStatus.new }}</span> ||
+              <span>
+                <b>Confirmadas : </b> {{ allStatus.confirmed }}</span> ||
+              <span>
+                <b>Empaquetadas : </b> {{ allStatus.packaged }}</span> ||
+              <span>
+                <b>Entregadas : </b> {{ allStatus.delivered }}</span>
+            </h6>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="col-12">
+    <mat-card>
+      <mat-card-content>
+        <!-- {{ isLoading}} -->
+        <ng-container *ngIf='dataSource'>
+          <div class="table-container">
+            <ng-container *ngIf='!isLoading; else loading'>
+              <div class="row">
+                <div class="col-12">
+                  <mat-form-field class='full-width'>
+                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                  </mat-form-field>
+                </div>
+              </div>
+              <mat-table *ngIf='dataSource.data.length; else noOrders' #table matSort (matSortChange)="sortData($event)" [dataSource]="dataSource"
+                class='table'>
+
+                <!-- User name Column -->
+                <ng-container matColumnDef="user-name">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header='user-name'> Cliente </mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    {{element.user.name}}
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Products Column -->
+                <ng-container matColumnDef="products">
+                  <mat-header-cell *matHeaderCellDef> Productos </mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    <p>
+                      <b>Principal : </b> {{element.products?.mainCourse}} </p>
+                    <p>
+                      <b>Acompañamientos : </b>
+                    </p>
+                    <p *ngFor='let side of element.products?.sides'> {{ side }} </p>
+                    <p>
+                      <b>Bebida : </b> {{element.products?.beverage}} </p>
+                    <p>
+                      <b>Tortillas : </b> {{ element.products?.tortillas }}
+                    </p>
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Status Column -->
+                <ng-container matColumnDef="status">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header='status'> Estado </mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    {{ element?.details?.status}}
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Ordenado para Column -->
+                <ng-container matColumnDef="date">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header='orderedForDate'> Para </mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    <p>
+                      {{ element.details?.orderedForDate | date:"EEEE" | dow }} {{ element.details?.orderedForDate | date:"shortDate" }}
+                    </p>
+                    <p>(Ordenado el {{ element.details?.orderedByDate | date:"EEEE" | dow }} {{ element.details?.orderedByDate
+                      | date:"short" }})
+                    </p>
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Payment Column -->
+                <ng-container matColumnDef="payment">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header='payment'> Pago </mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    <p>
+                      <b>
+                        Balance :
+                      </b>
+                      <br>{{ element.payment.balance | currency }}
+                    </p>
+                    <p>
+                      <b>Costo : </b>
+                      <br>{{ element.payment.cost | currency }}
+                    </p>
+                    <p>
+                      <b>Ganancia : </b>
+                      <br>{{ element.payment.balance - element.payment.cost | currency }}
+                    </p>
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Ordenado para Column -->
+                <ng-container matColumnDef="paid">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header='paid'> Pagado? </mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    <p>
+                      <i class="material-icons">
+                        {{ element?.details.paid ? "check_circle" : "close" }}
+                      </i>
+                    </p>
+                    <p *ngIf='element.payment?.paidDate'>
+                      {{ element.payment?.paidDate | date:"EEEE" | dow }} {{ element.payment?.paidDate | date:"short"}}
+                    </p>
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Actions Column -->
+                <ng-container matColumnDef="actions">
+                  <mat-header-cell *matHeaderCellDef> Acciones</mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    <mat-form-field>
+                      <mat-select placeholder='Cambiar estado' [ngModel]='element?.details?.status' (change)='onUpdateStatus(element, $event.value)'>
+                        <mat-option value='Confirmado'>Confirmado</mat-option>
+                        <mat-option value='Empaquetado'>Empaquetado</mat-option>
+                        <mat-option value='Entregado'>Entregado</mat-option>
+                        <mat-option value='Nueva orden'>Nueva orden</mat-option>
+                        <mat-option value='Cancelado'>Cancelado</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <br>
+                    <button mat-button [disabled]='element.details.paid' (click)='onPay(element)'>
+                      {{element.details.paid ? "Pagado" : "Pagar"}}
+                    </button>
+                  </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="newRowIndex == row.id ? 'highlight' : ''"></mat-row>
+              </mat-table>
+              <ng-template #noOrders>
+                <h4>No hay ordenes (?)</h4>
+              </ng-template>
+            </ng-container>
+            <ng-template #loading>
+              <mat-spinner class='mx-auto'></mat-spinner>
+            </ng-template>
+            <mat-paginator [pageSize]='25' [pageSizeOptions]=" [5, 10, 25, 100] "></mat-paginator>
+          </div>
+        </ng-container>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+<!-- TABLE CARD -->

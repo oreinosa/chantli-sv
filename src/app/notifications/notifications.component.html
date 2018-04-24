@@ -1,0 +1,16 @@
+<div class="wrapper">
+  <mat-card class="notification" (click)='onDismiss(notification)' *ngFor='let notification of notifications' [ngClass]='notification.background'
+    @fadeIn @fadeOut>
+    <mat-card-title> {{ notification.title }}</mat-card-title>
+    <mat-card-content>
+      <div class='row'>
+        <div class="col-8">
+          {{ notification.body }}
+        </div>
+        <div class="col-4">
+          <i class="material-icons">{{ notification.icon }}</i>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

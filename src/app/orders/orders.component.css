@@ -1,0 +1,37 @@
+/* .mat-column-user-name {
+  flex: 0 0 10%;
+}
+.mat-column-products {
+  flex: 0 0 20%;
+}
+.mat-column-status {
+  flex: 0 0 15%;
+}
+.mat-column-date {
+  flex: 0 0 15%;
+}
+.mat-column-payment {
+  flex: 0 0 12.5%;
+}
+.mat-column-paid {
+  flex: 0 0 12.5%;
+}
+.mat-column-actions {
+  flex: 0 0 15%;
+}
+*/
+.mat-table {
+  overflow: auto;
+} 
+.highlight{
+  transition: background-color 1.5s ease;
+  background: #42A948;
+}
+.mat-cell, .mat-header-cell {
+  overflow: hidden;
+  word-wrap: break-word;
+  padding: 0 15px;   
+}
+.mat-cell{
+  flex: 1;
+}

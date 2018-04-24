@@ -1,0 +1,42 @@
+<form #f='ngForm' (ngSubmit)='onSubmit(product.id, f.value)' *ngIf='product'>
+  <h6>Actualizar producto</h6>
+  <!-- {{ p | json }} -->
+  <ng-container *ngIf='!f?.submitted; else loading'>
+    <input type="hidden" name="imageURL" [(ngModel)]='product.imageURL'>
+    <mat-form-field class='full-width'>
+      <input matInput type="text" placeholder='Nombre' [ngModel]='product.name' name='name' required>
+    </mat-form-field>
+    <mat-form-field class='full-width'>
+      <mat-select placeholder='Categoria' [ngModel]='product.category' name='category' required>
+        <mat-option *ngFor='let category of categories | async' [value]='category.name'>
+          {{ category.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class='full-width' *ngIf='f?.value?.category == "Bebida"'>
+      <input matInput type="number" placeholder='Extra' [ngModel]='product.extra' name='extra' min=0>
+    </mat-form-field>
+    <mat-form-field class='full-width'>
+      <input matInput type="number" placeholder='Cost' [ngModel]='product.cost' name='cost' required min=0>
+    </mat-form-field>
+    <div class="row">
+      <div class="col-12 col-sm-4">
+        <input type="file" placeholder='Imagen' (change)="previewImage($event)" />
+      </div>
+      <div class="col-12 col-sm-8">
+        <ng-container *ngIf='imageURL;else noImage'>
+          <img [src]="imageURL" alt="Imagen" class='img-fluid'>
+        </ng-container>
+        <ng-template #noImage>
+          <p>(No has seleccionado una imagen)</p>
+        </ng-template>
+      </div>
+    </div>
+
+    <button mat-button type='submit' [disabled]='f.invalid'>Actualizar</button>
+    <button mat-button type='button' (click)='onBack()'>Cancelar</button>
+  </ng-container>
+  <ng-template #loading>
+    <mat-spinner class='mx-auto'></mat-spinner>
+  </ng-template>
+</form>

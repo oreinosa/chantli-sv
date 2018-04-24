@@ -1,0 +1,29 @@
+<mat-card @fadeIn>
+  <mat-card-header>
+    <mat-card-title>
+      <h3>Selecciona tu bebida</h3>
+    </mat-card-title>
+    <mat-card-subtitle>
+      <h5>Paso 2</h5>
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content class='row'>
+    <div class="col-12 text-center hover">
+      <h4>Bebida</h4>
+      <div class="row">
+        <div class="col-12 col-sm-6 col-md-3" *ngFor='let b of (beverages | async)'>
+          <figure>
+            <img [src]="b.imageURL" alt="image" class="img-fluid" (click)='onSelectBeverage(b)' [ngClass]='selProducts && (b.name == selProducts?.beverage?.name) ? "selected" : ""'>
+          </figure>
+          <h6>{{ b.name }}</h6>
+          <p *ngIf='b?.extra'>Extra : {{ b?.extra }}</p>
+        </div>
+      </div>
+      <h6 *ngIf='!selProducts?.beverage' @shrinkX>Selecciona una bebida</h6>      
+    </div>
+  </mat-card-content>
+  <mat-card-actions align='end'>
+    <button mat-button type='button' (click)='onStep(1)'>Regresar</button>
+    <button mat-button type='button' (click)='onStep(3)' [disabled]='!selProducts?.beverage'>Continuar</button>
+  </mat-card-actions>
+</mat-card>
