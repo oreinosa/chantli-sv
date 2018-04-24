@@ -17,6 +17,9 @@
     <mat-form-field class='full-width'>
       <input matInput type="number" placeholder='Costo' [(ngModel)]='product.cost' name='cost' required min=0>
     </mat-form-field>
+    <mat-checkbox [(ngModel)]='product.noSides' name='noSides'>
+      Sin acompañamientos?
+    </mat-checkbox>
     <!-- IMAGE -->
     <div class="row">
       <div class="col-12 col-sm-4">
